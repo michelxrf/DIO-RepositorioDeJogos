@@ -17,6 +17,9 @@ namespace ApiCatalogoJogos.InputModel
         [Required]
         [Range(1, 1000, ErrorMessage = "O preco deve ser no minimo 1 real e no maximo 1000 reais.")]
         public double Preco { get; set; }
+        [Required]
+        [Range(1900, 2100, ErrorMessage = "O lancamenteo precisa ser um inteiro entre 1900 e 2100")]
+        public int Lancamento { get; set; }
 
 
     }

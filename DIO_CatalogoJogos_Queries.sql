@@ -1,0 +1,17 @@
+CREATE DATABASE CatalogoJogos;
+
+DROP DATABASE CatalogoJogos;
+
+DROP TABLE Jogos;
+
+USE CatalogoJogos;
+
+CREATE TABLE Jogos
+(
+Id UNIQUEIDENTIFIER NOT NULL,
+Nome VARCHAR(255) NOT NULL,
+Produtora VARCHAR(255) NOT NULL,
+Preco REAL NOT NULL,
+Lancamento INT NOT NULL,
+PRIMARY KEY (Id)
+);

@@ -1,5 +1,5 @@
 using ApiCatalogoJogos.Controllers.V1;
-//using ApiCatalogoJogos.Middleware;
+using ApiCatalogoJogos.Middleware;
 using ApiCatalogoJogos.Repositories;
 using ApiCatalogoJogos.Respositories;
 using ApiCatalogoJogos.Services;

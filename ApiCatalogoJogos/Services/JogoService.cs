@@ -28,7 +28,8 @@ namespace ApiCatalogoJogos.Services
                 Id = jogo.Id,
                 Nome = jogo.Nome,
                 Produtora = jogo.Produtora,
-                Preco = jogo.Preco
+                Preco = jogo.Preco,
+                Lancamento = jogo.Lancamento
             }).ToList();
         }
 
@@ -44,7 +45,8 @@ namespace ApiCatalogoJogos.Services
                 Id = jogo.Id,
                 Nome = jogo.Nome,
                 Produtora = jogo.Produtora,
-                Preco = jogo.Preco
+                Preco = jogo.Preco,
+                Lancamento = jogo.Lancamento
             };
         }
 
@@ -60,7 +62,8 @@ namespace ApiCatalogoJogos.Services
                 Id = Guid.NewGuid(),
                 Nome = jogo.Nome,
                 Produtora = jogo.Produtora,
-                Preco = jogo.Preco
+                Preco = jogo.Preco,
+                Lancamento = jogo.Lancamento
             };
 
             await _jogoRepository.Inserir(jogoInsert);
@@ -70,7 +73,8 @@ namespace ApiCatalogoJogos.Services
                 Id = jogoInsert.Id,
                 Nome = jogo.Nome,
                 Produtora = jogo.Produtora,
-                Preco = jogo.Preco
+                Preco = jogo.Preco,
+                Lancamento = jogo.Lancamento
             };
         }
 
@@ -84,6 +88,7 @@ namespace ApiCatalogoJogos.Services
             entidadeJogo.Nome = jogo.Nome;
             entidadeJogo.Produtora = jogo.Produtora;
             entidadeJogo.Preco = jogo.Preco;
+            entidadeJogo.Lancamento = jogo.Lancamento;
 
             await _jogoRepository.Atualizar(entidadeJogo);
         }

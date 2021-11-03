@@ -11,5 +11,6 @@ namespace ApiCatalogoJogos.ViewModel
         public string Nome { get; set; }
         public string Produtora { get; set; }
         public double Preco { get; set; }
+        public int Lancamento { get; set; }
     }
 }
