@@ -89,7 +89,7 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <param name="jogoInputModel">Novos dados para atualizar o jogo indicado</param>
         /// <response code="200">Cao o jogo seja atualizado com sucesso</response>
         /// <response code="404">Caso não exista um jogo com este Id</response>   
-        [HttpPut("(idJogo:guid)")]
+        [HttpPut("{idJogo:guid}")]
         public async Task<ActionResult> AtualizarJogo([FromRoute] Guid idJogo, [FromBody] JogoInputModel jogoInputModel)
         {
             try
