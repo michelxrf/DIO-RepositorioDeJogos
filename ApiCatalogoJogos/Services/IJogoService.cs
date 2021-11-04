@@ -9,11 +9,11 @@ namespace ApiCatalogoJogos.Services
 {
     public interface IJogoService : IDisposable
     {
-        Task<List<JogoViewModel>> Obter(int pagina, int quantidade);
-        Task<JogoViewModel> Obter(Guid id);
-        Task<JogoViewModel> Inserir(JogoInputModel jogo);
-        Task Atualizar(Guid id, JogoInputModel jogo);
-        Task Atualizar(Guid id, double preco);
-        Task Remover(Guid id);
+        List<JogoViewModel> Obter(int pagina, int quantidade);
+        JogoViewModel Obter(Guid id);
+        JogoViewModel Inserir(JogoInputModel jogo);
+        void Atualizar(Guid id, JogoInputModel jogo);
+        void Atualizar(Guid id, double preco);
+        void Remover(Guid id);
     }
 }

@@ -13,123 +13,135 @@ namespace ApiCatalogoJogos.Respositories
     public class JogoSqlServerRepository : IJogoRepository
     {
         private readonly SqlConnection sqlConnection;
+        private readonly String DbLocation = "Data Source=CatalogoJogos.db";
 
         public JogoSqlServerRepository(IConfiguration configuration)
         {
-            //SqliteConnection sqlConnection = new SqliteConnection(configuration.GetConnectionString("Sqlite"));
-
-            AssertDb();
+            CriaDb();
         }
 
-        public async Task<List<Jogo>> Obter(int pagina, int quantidade)
+        public List<Jogo> Obter(int pagina, int quantidade)
         {
             var jogos = new List<Jogo>();
 
-            var comando = $"select * from Jogos order by id offset {((pagina - 1) * quantidade)} rows fetch next {quantidade} rows only";
-
-            await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
             {
-                jogos.Add(new Jogo
-                {
-                    Id = (Guid)sqlDataReader["Id"],
-                    Nome = (string)sqlDataReader["Nome"],
-                    Produtora = (string)sqlDataReader["Produtora"],
-                    Preco = Convert.ToDouble(sqlDataReader["Preco"]),
-                    Lancamento = Convert.ToInt32(sqlDataReader["Lancamento"])
-                });
-            }
+                sqlConnection.Open();
 
-            await sqlConnection.CloseAsync();
+                var comando = sqlConnection.CreateCommand();
+
+                comando.CommandText = $"select * from Jogos order by id offset {((pagina - 1) * quantidade)} rows fetch next {quantidade} rows only";
+                SqliteDataReader sqlDataReader = comando.ExecuteReader();
+
+                while (sqlDataReader.Read())
+                {
+                    jogos.Add(new Jogo
+                    {
+                        Id = Guid.Parse((string)sqlDataReader["Id"]),
+                        Nome = (string)sqlDataReader["Nome"],
+                        Produtora = (string)sqlDataReader["Produtora"],
+                        Preco = Convert.ToDouble(sqlDataReader["Preco"]),
+                        Lancamento = Convert.ToInt32(sqlDataReader["Lancamento"])
+                    });
+                }
+            }
 
             return jogos;
         }
 
-        public async Task<Jogo> Obter(Guid id)
+        public Jogo Obter(Guid id)
         {
             Jogo jogo = null;
 
-            var comando = $"select * from Jogos where Id = '{id}'";
-
-            await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
             {
-                jogo = new Jogo
-                {
-                    Id = (Guid)sqlDataReader["Id"],
-                    Nome = (string)sqlDataReader["Nome"],
-                    Produtora = (string)sqlDataReader["Produtora"],
-                    Preco = Convert.ToDouble(sqlDataReader["Preco"]),
-                    Lancamento = Convert.ToInt32(sqlDataReader["Lancamento"])
-                };
-            }
+                sqlConnection.Open();
 
-            await sqlConnection.CloseAsync();
+                var comando = sqlConnection.CreateCommand();
+                comando.CommandText = $"select * from Jogos where Id = '{id}'";
+
+                SqliteDataReader sqlDataReader = comando.ExecuteReader();
+
+                while (sqlDataReader.Read())
+                {
+                    jogo = new Jogo
+                    {
+                        Id = (Guid)sqlDataReader["Id"],
+                        Nome = (string)sqlDataReader["Nome"],
+                        Produtora = (string)sqlDataReader["Produtora"],
+                        Preco = Convert.ToDouble(sqlDataReader["Preco"]),
+                        Lancamento = Convert.ToInt32(sqlDataReader["Lancamento"])
+                    };
+                }
+
+            }
 
             return jogo;
         }
 
-        public async Task<List<Jogo>> Obter(string nome, string produtora)
+        public List<Jogo> Obter(string nome, string produtora)
         {
             var jogos = new List<Jogo>();
 
-            var comando = $"select * from Jogos where Nome = '{nome}' and Produtora = '{produtora}'";
-
-            await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
             {
-                jogos.Add(new Jogo
-                {
-                    Id = (Guid)sqlDataReader["Id"],
-                    Nome = (string)sqlDataReader["Nome"],
-                    Produtora = (string)sqlDataReader["Produtora"],
-                    Preco = Convert.ToDouble(sqlDataReader["Preco"]),
-                    Lancamento = Convert.ToInt32(sqlDataReader["Lancamento"])
-                });
-            }
+                sqlConnection.Open();
 
-            await sqlConnection.CloseAsync();
+                var comando = sqlConnection.CreateCommand();
+                comando.CommandText = $"select * from Jogos where Nome = '{nome}' and Produtora = '{produtora}'";
+                SqliteDataReader sqlDataReader = comando.ExecuteReader();
+
+                while (sqlDataReader.Read())
+                {
+                    jogos.Add(new Jogo
+                    {
+                        Id = Guid.Parse((string)sqlDataReader["Id"]),
+                        Nome = (string)sqlDataReader["Nome"],
+                        Produtora = (string)sqlDataReader["Produtora"],
+                        Preco = Convert.ToDouble(sqlDataReader["Preco"]),
+                        Lancamento = Convert.ToInt32(sqlDataReader["Lancamento"])
+                    });
+                }
+            }
 
             return jogos;
         }
 
-        public async Task Inserir(Jogo jogo)
+        public void Inserir(Jogo jogo)
         {
-            var comando = $"insert Jogos (Id, Nome, Produtora, Preco, Lancamento) values ('{jogo.Id}', '{jogo.Nome}', '{jogo.Produtora}', {jogo.Preco.ToString().Replace(",", ".")}, {jogo.Lancamento})";
+            using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
+            {
+                sqlConnection.Open();
 
-            await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            sqlCommand.ExecuteNonQuery();
-            await sqlConnection.CloseAsync();
+                var comando = sqlConnection.CreateCommand();
+                comando.CommandText = $"insert Jogos (Id, Nome, Produtora, Preco, Lancamento) values ('{jogo.Id}', '{jogo.Nome}', '{jogo.Produtora}', {jogo.Preco.ToString().Replace(",", ".")}, {jogo.Lancamento})";
+                comando.ExecuteNonQuery();
+            }
         }
 
-        public async Task Atualizar(Jogo jogo)
+        public void Atualizar(Jogo jogo)
         {
-            var comando = $"update Jogos set Nome = '{jogo.Nome}', Produtora = '{jogo.Produtora}', Preco = {jogo.Preco.ToString().Replace(",", ".")}, Lancamento = {jogo.Lancamento} where Id = '{jogo.Id}'";
+            using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
+            {
+                sqlConnection.Open();
 
-            await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            sqlCommand.ExecuteNonQuery();
-            await sqlConnection.CloseAsync();
+                var comando = sqlConnection.CreateCommand();
+                comando.CommandText = $"update Jogos set Nome = '{jogo.Nome}', Produtora = '{jogo.Produtora}', Preco = {jogo.Preco.ToString().Replace(",", ".")}, Lancamento = {jogo.Lancamento} where Id = '{jogo.Id}'";
+                comando.ExecuteNonQuery();
+            }
         }
 
-        public async Task Remover(Guid id)
+        public void Remover(Guid id)
         {
-            var comando = $"delete from Jogos where Id = '{id}'";
+            using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
+            {
+                sqlConnection.Open();
 
-            await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            sqlCommand.ExecuteNonQuery();
-            await sqlConnection.CloseAsync();
+                var comando = sqlConnection.CreateCommand();
+                comando.CommandText = $"delete from Jogos where Id = '{id}'";
+                comando.ExecuteNonQuery();
+            }
+
         }
 
         public void Dispose()
@@ -138,11 +150,11 @@ namespace ApiCatalogoJogos.Respositories
             sqlConnection?.Dispose();
         }
 
-        private void AssertDb()
+        private void CriaDb()
         {
             try
             {
-                using (SqliteConnection sqlConnection = new SqliteConnection("Data Source = CatalogoJogos.db"))
+                using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
                 {
                     sqlConnection.Open();
 
@@ -156,7 +168,7 @@ namespace ApiCatalogoJogos.Respositories
             }
             catch
             {
-                using (SqliteConnection sqlConnection = new SqliteConnection("Data Source = CatalogoJogos.db"))
+                using (SqliteConnection sqlConnection = new SqliteConnection(DbLocation))
                 {
                     sqlConnection.Open();
 

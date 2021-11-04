@@ -34,9 +34,9 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <response code="200">Retorna a lista de jogos</response>
         /// <response code="204">Caso não haja jogos</response>   
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JogoViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
+        public ActionResult<IEnumerable<JogoViewModel>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
         {
-            var jogos = await _jogoService.Obter(pagina, quantidade);
+            var jogos = _jogoService.Obter(pagina, quantidade);
 
             if (jogos.Count() == 0)
                 return NoContent();
@@ -51,9 +51,9 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <response code="200">Retorna o jogo filtrado</response>
         /// <response code="204">Caso não haja jogo com este id</response>
         [HttpGet("{idJogo:guid}")]
-        public async Task<ActionResult<JogoViewModel>> Obter([FromRoute] Guid idJogo)
+        public ActionResult<JogoViewModel> Obter([FromRoute] Guid idJogo)
         {
-            var jogo = await _jogoService.Obter(idJogo);
+            var jogo = _jogoService.Obter(idJogo);
 
             if (jogo == null)
                 return NoContent();
@@ -68,11 +68,11 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <response code="200">Cao o jogo seja inserido com sucesso</response>
         /// <response code="422">Caso já exista um jogo com mesmo nome para a mesma produtora</response>   
         [HttpPost]
-        public async Task<ActionResult<JogoViewModel>> InserirJogo([FromBody] JogoInputModel jogoInputModel)
+        public ActionResult<JogoViewModel> InserirJogo([FromBody] JogoInputModel jogoInputModel)
         {
             try
             {
-                var jogo = await _jogoService.Inserir(jogoInputModel);
+                var jogo = _jogoService.Inserir(jogoInputModel);
 
                 return Ok(jogo);
             }
@@ -90,11 +90,11 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <response code="200">Cao o jogo seja atualizado com sucesso</response>
         /// <response code="404">Caso não exista um jogo com este Id</response>   
         [HttpPut("{idJogo:guid}")]
-        public async Task<ActionResult> AtualizarJogo([FromRoute] Guid idJogo, [FromBody] JogoInputModel jogoInputModel)
+        public ActionResult AtualizarJogo([FromRoute] Guid idJogo, [FromBody] JogoInputModel jogoInputModel)
         {
             try
             {
-                await _jogoService.Atualizar(idJogo, jogoInputModel);
+                _jogoService.Atualizar(idJogo, jogoInputModel);
 
                 return Ok();
             }
@@ -112,11 +112,11 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <response code="200">Cao o preço seja atualizado com sucesso</response>
         /// <response code="404">Caso não exista um jogo com este Id</response>
         [HttpPatch("{idJogo:guid}/preco/{preco:double}")]
-        public async Task<ActionResult> AtualizarJogo([FromRoute] Guid idJogo, [FromRoute] double preco)
+        public ActionResult AtualizarJogo([FromRoute] Guid idJogo, [FromRoute] double preco)
         {
             try
             {
-                await _jogoService.Atualizar(idJogo, preco);
+                _jogoService.Atualizar(idJogo, preco);
 
                 return Ok();
             }
@@ -133,11 +133,11 @@ namespace ApiCatalogoJogos.Controllers.V1
         /// <response code="200">Cao o preço seja atualizado com sucesso</response>
         /// <response code="404">Caso não exista um jogo com este Id</response>   
         [HttpDelete("{idJogo:guid}")]
-        public async Task<ActionResult> ApagarJogo([FromRoute] Guid idJogo)
+        public ActionResult ApagarJogo([FromRoute] Guid idJogo)
         {
             try
             {
-                await _jogoService.Remover(idJogo);
+                _jogoService.Remover(idJogo);
 
                 return Ok();
             }
