@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace ApiCatalogoJogos.Respositories
 {
@@ -15,7 +16,9 @@ namespace ApiCatalogoJogos.Respositories
 
         public JogoSqlServerRepository(IConfiguration configuration)
         {
-            sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+            //SqliteConnection sqlConnection = new SqliteConnection(configuration.GetConnectionString("Sqlite"));
+
+            AssertDb();
         }
 
         public async Task<List<Jogo>> Obter(int pagina, int quantidade)
@@ -133,6 +136,46 @@ namespace ApiCatalogoJogos.Respositories
         {
             sqlConnection?.Close();
             sqlConnection?.Dispose();
+        }
+
+        private void AssertDb()
+        {
+            try
+            {
+                using (SqliteConnection sqlConnection = new SqliteConnection("Data Source = CatalogoJogos.db"))
+                {
+                    sqlConnection.Open();
+
+                    var comando = sqlConnection.CreateCommand();
+
+                    comando.CommandText = "SELECT * FROM Jogos";
+                    comando.ExecuteNonQuery();
+                    
+                }
+                
+            }
+            catch
+            {
+                using (SqliteConnection sqlConnection = new SqliteConnection("Data Source = CatalogoJogos.db"))
+                {
+                    sqlConnection.Open();
+
+                    var comando = sqlConnection.CreateCommand();
+                    
+                    comando.CommandText = @"CREATE TABLE Jogos 
+                    (Id text UNIQUE NOT NULL,
+                    Nome text NOT NULL,
+                    Produtora text NOT NULL,
+                    Preco real NOT NULL,
+	                Lancamento int NOT NULL,
+                    PRIMARY KEY (Id));";
+
+                    comando.ExecuteNonQuery();
+
+                }
+
+                
+            }
         }
     }
 }

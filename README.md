@@ -25,3 +25,7 @@ create_database();
 }
 ```
 O que também não funcionou, tive problemas para fechar a conexão depois de abrí-la no teste. Mas vou explorar mais, tem de haver uma maneira de fazer isso.
+
+### SQLite
+Acredito ter resolvido o problema. Mudei o database para o SQLite invés do Sql Server. Assim consegui criar um DB local.
+A configuração e criação do DB está pronta e parece funcionar, agora preciso reescrver os outros métodos do __repository__ para poder testar.
