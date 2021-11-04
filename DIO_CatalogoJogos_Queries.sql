@@ -1,10 +1,10 @@
-CREATE DATABASE CatalogoJogos;
-
 DROP DATABASE CatalogoJogos;
 
 DROP TABLE Jogos;
 
 USE CatalogoJogos;
+
+CREATE DATABASE CatalogoJogos;
 
 CREATE TABLE Jogos
 (

@@ -11,8 +11,8 @@ Queria implementar isso de uma forma que eu já tinha usado com Python e SQLite 
 ```
 if(!database.exists()) then create
 ```
-Porém não achei forma direta de implementar isso no ambiente dotnet.
-<br>
+Porém não achei forma direta de implementar isso no ambiente dotnet.\
+
 Então tentei fazer um teste de conexão com:
 ```
 try
